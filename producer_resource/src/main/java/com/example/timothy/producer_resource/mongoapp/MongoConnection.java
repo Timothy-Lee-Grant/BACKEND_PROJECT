@@ -9,7 +9,7 @@ public class MongoConnection {
         String uri = "mongodb://localhost:27017";
 
         try (MongoClient mongoClient = MongoClients.create(uri)) {
-            MongoDatabase database = mongoClient.getDatabase("test");
+            MongoDatabase database = mongoClient.getDatabase("supplydb");
             System.out.println("Connected to database: " + database.getName());
         }
     }
