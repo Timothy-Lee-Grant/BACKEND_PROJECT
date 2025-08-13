@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Inventory Manager</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <h1>Inventory Manager</h1>
+
+  <form action="/add" method="POST">
+    <h2>Add Item</h2>
+    <input type="text" name="item" placeholder="Item name" required>
+    <button type="submit">Add</button>
+  </form>
+
+  <form action="/remove" method="POST">
+    <h2>Remove Item</h2>
+    <input type="text" name="item" placeholder="Item name" required>
+    <button type="submit">Remove</button>
+  </form>
+</body>
+</html>
