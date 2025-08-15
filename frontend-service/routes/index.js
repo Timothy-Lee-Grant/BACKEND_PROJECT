@@ -62,4 +62,20 @@ router.get('/products', async (req, res) => {
 });
 
 
+
+
+// index.js
+require('../services/eureka'); // Start Eureka client
+const { callService } = require('../services/serviceCaller');
+
+router.get('/hello', async (req, res) => {
+  try {
+    const message = await callService('PRODUCER_RESOURCE', '/api/hello');
+    res.send(message);
+  } catch (err) {
+    res.status(500).send('Failed to reach producer');
+  }
+});
+
+
 module.exports = router;

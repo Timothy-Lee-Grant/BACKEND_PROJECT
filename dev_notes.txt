@@ -1,0 +1,24 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
+front-end microservice:
+ip address: localhost
+port: 3000
+
+registry microservice
+ip address: localhost
+port: 8761
+
+producer microservice
+ip address: localhost
+port: 8080

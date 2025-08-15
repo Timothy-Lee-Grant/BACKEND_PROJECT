@@ -11,6 +11,8 @@
 const express = require('express');
 const path = require('path'); 
 const indexRouter = require('./routes/index');
+const session = require('express-session');
+require('./services/eureka');
 
 const app = express();
 app.set('view engine', 'ejs');

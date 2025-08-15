@@ -1,3 +1,14 @@
+
+
+
+
+
+
+
+
+
+
+
 const { Eureka } = require('eureka-js-client');
 
 const client = new Eureka({
@@ -19,6 +30,12 @@ const client = new Eureka({
   }
 });
 
-client.start();
+client.start((error) => {
+  if (error) {
+    console.error('Eureka registration failed:', error);
+  } else {
+    console.log('Registered with Eureka as front-gateway');
+  }
+});
 
 module.exports = client;
