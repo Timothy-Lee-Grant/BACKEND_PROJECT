@@ -26,4 +26,40 @@ router.post('/remove', async (req,res)=>{
     res.render('result', {message: result});
 });
 
+
+router.get('/login', (req, res) => {
+  res.render('login');
+});
+
+router.post('/login', async (req, res) => {
+  const { username, password } = req.body;
+
+  // Call auth microservice
+  try {
+    const response = await axios.post('http://auth-service/login', { username, password });
+    req.session.user = response.data.user;
+    res.redirect('/');
+  } catch (err) {
+    res.render('login', { error: 'Invalid credentials' });
+  }
+});
+
+router.get('/logout', (req, res) => {
+  req.session.destroy(() => res.redirect('/'));
+});
+
+
+
+router.get('/products', async (req, res) => {
+  if (!req.session.user) return res.redirect('/login');
+
+  try {
+    const response = await axios.get('http://product-service/products');
+    res.render('products', { products: response.data });
+  } catch (err) {
+    res.status(500).send('Error fetching products');
+  }
+});
+
+
 module.exports = router;
