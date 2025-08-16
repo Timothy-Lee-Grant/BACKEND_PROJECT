@@ -1,14 +1,5 @@
 
 
-
-
-
-
-
-
-
-
-
 const { Eureka } = require('eureka-js-client');
 
 const client = new Eureka({

@@ -13,7 +13,7 @@ const consumerService = require('../services/consumerService');
 
 router.get('/', (req,res)=>{
     console.log("you reached the index endpoint!! :D ");
-    res.send('index');
+    res.render('home_page');
 });
 
 router.post('/add', async (req,res)=>{
@@ -65,7 +65,7 @@ router.get('/products', async (req, res) => {
 
 
 // index.js
-require('../services/eureka'); // Start Eureka client
+//require('../services/eureka'); // Start Eureka client
 const { callService } = require('../services/serviceCaller');
 
 router.get('/hello', async (req, res) => {

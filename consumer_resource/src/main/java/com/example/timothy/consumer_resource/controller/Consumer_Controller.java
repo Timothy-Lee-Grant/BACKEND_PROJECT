@@ -53,7 +53,7 @@ public class Consumer_Controller {
             {
                 if (item.getQuantity() < supply.getQuantity())
                 {
-                    repository.deleteById(item.getId());
+                    //repository.deleteById(item.getId());
                     return ResponseEntity.status(HttpStatus.OK).body("Not enough inventory");
                 }
                 item.setQuantity(item.getQuantity()-supply.getQuantity());

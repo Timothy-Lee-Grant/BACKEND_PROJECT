@@ -1,13 +1,4 @@
 
-
-
-
-
-
-
-
-
-
 const express = require('express');
 const path = require('path'); 
 const indexRouter = require('./routes/index');
@@ -27,6 +18,8 @@ app.use(session({
 }));
 
 app.use('/', indexRouter);
+
+//app.use('/testing, testingRouter');
 
 const PORT = process.env.PORT || 3000; // we get the port but how does the process.env acutally work? does it communicate with my OS 
 app.listen(PORT, ()=>console.log(`Frontend service is now running on ${PORT}`));

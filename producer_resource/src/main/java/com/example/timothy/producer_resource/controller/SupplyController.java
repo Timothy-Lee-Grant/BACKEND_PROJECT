@@ -24,6 +24,7 @@ public class SupplyController {
 
     @PostMapping
     public Supply addSupply(@RequestBody Supply supply) {
+        System.out.println("Controller method hit with: " + supply.getName());
         return repository.save(supply);
     }
 }
