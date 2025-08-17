@@ -28,4 +28,22 @@ async function callService(serviceName, endpoint) {
   }
 }
 
-module.exports = { callService };
+async function postService(serviceName, endpoint, req) {
+  const baseUrl = getServiceUrl(serviceName);
+  try {
+    const response = await axios.post(`${baseUrl}${endpoint}`,{
+      name: req.body.name,
+      quantity: req.body.quantity
+    },{
+  headers: {
+    'Content-Type': 'application/json'
+  }
+  } );
+    return response.data;
+  } catch (error) {
+    console.error(`❌ Error calling ${serviceName}:`, error.message);
+    throw error;
+  }
+}
+
+module.exports = { callService, postService };

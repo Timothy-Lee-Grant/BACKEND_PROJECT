@@ -13,7 +13,7 @@ const consumerService = require('../services/consumerService');
 
 router.get('/', (req,res)=>{
     console.log("you reached the index endpoint!! :D ");
-    res.render('home_page');
+    res.render('home_page', {message:"hello"});
 });
 
 router.post('/add', async (req,res)=>{
@@ -66,11 +66,20 @@ router.get('/products', async (req, res) => {
 
 // index.js
 //require('../services/eureka'); // Start Eureka client
-const { callService } = require('../services/serviceCaller');
+const { callService , postService} = require('../services/serviceCaller');
 
 router.get('/hello', async (req, res) => {
   try {
     const message = await callService('PRODUCER_RESOURCE', '/api/hello');
+    res.send(message);
+  } catch (err) {
+    res.status(500).send('Failed to reach producer');
+  }
+});
+
+router.post('/producer_resource_frontend', async (req, res) => {
+  try {
+    const message = await postService('PRODUCER_RESOURCE', '/api/supplies', req);
     res.send(message);
   } catch (err) {
     res.status(500).send('Failed to reach producer');
