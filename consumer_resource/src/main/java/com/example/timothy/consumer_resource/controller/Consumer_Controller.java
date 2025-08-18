@@ -45,6 +45,9 @@ public class Consumer_Controller {
     @PostMapping("/")
     public ResponseEntity<String> consumePage(@RequestBody Supply supply)
     {
+        return ResponseEntity.status(HttpStatus.OK).body("Testing");
+
+        System.out.println("Reached the consume resource endpoint (POST)");
         //find element by name 
         List<Supply> items = repository.findAll();
         for (Supply item : items) {

@@ -4,6 +4,7 @@
     <title>Submit Supply</title>
     <script>
         async function submitSupply(event) {
+            console.log("you reached the submit supply function");
             event.preventDefault(); // Prevent default form submission
 
             const name = document.getElementById('name').value;
@@ -20,6 +21,22 @@
             const result = await response.json();
             alert(result.message || 'Supply submitted!');
         }
+        async function takeSupply(event) {
+            console.log("you reached the take supply function");
+            event.preventDefault();
+
+            const name = document.getElementById("name_consume").value;
+            const quantity = document.getElementById("quantity_consume").value;
+            console.log(`name: ${name}, quantity ${quantity}`);
+
+            const response = await fetch('/consumer_resource_frontend', {
+                method: 'POST',
+                headers:{
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({name,quantity})
+            });
+        }
     </script>
 </head>
 <body>
@@ -30,6 +47,17 @@
 
         <label for="quantity">Quantity:</label>
         <input type="number" id="quantity" required><br><br>
+
+        <button type="submit">Submit</button>
+    </form>
+
+    <h1>Take a Supply</h1>
+    <form onsubmit="takeSupply(event)">
+        <label for="name_consume">Name</label>
+        <input type="text" id="name_consume" required><br><br>
+
+        <label for="quantity_consume">Quantity</label>
+        <input type="number" id="quantity_consume" required><br><br>
 
         <button type="submit">Submit</button>
     </form>

@@ -82,7 +82,16 @@ router.post('/producer_resource_frontend', async (req, res) => {
     const message = await postService('PRODUCER_RESOURCE', '/api/supplies', req);
     res.send(message);
   } catch (err) {
-    res.status(500).send('Failed to reach producer');
+    res.status(500).send(`Failed to reach producer. With error: ${err}`);
+  }
+});
+
+router.post('/consumer_resource_frontend', async (req,res)=>{
+  try{
+    const message = await postService('CONSUMER_RESOURCE', '/consume_resource', req);
+    res.send(message);
+  }catch(error){
+    res.status(500).send(`Failed to reach consumer microservice. With error: ${error}`);
   }
 });
 
