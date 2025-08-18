@@ -42,12 +42,14 @@ public class Consumer_Controller {
         return repository.findAll();
     }
 
-    @PostMapping("/")
+    @PostMapping
     public ResponseEntity<String> consumePage(@RequestBody Supply supply)
     {
-        return ResponseEntity.status(HttpStatus.OK).body("Testing");
+        //return ResponseEntity.status(HttpStatus.OK).body("Testing");
 
+        // /*
         System.out.println("Reached the consume resource endpoint (POST)");
+         
         //find element by name 
         List<Supply> items = repository.findAll();
         for (Supply item : items) {
@@ -65,5 +67,6 @@ public class Consumer_Controller {
             }
         }
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Item not found");
+        // */
     }
 }

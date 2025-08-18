@@ -28,8 +28,11 @@ async function callService(serviceName, endpoint) {
   }
 }
 
+
+//This one works for producer MS, does not work for consumer MS
 async function postService(serviceName, endpoint, req) {
   const baseUrl = getServiceUrl(serviceName);
+  console.log(`baseURL: ${baseUrl}`);
   try {
     const response = await axios.post(`${baseUrl}${endpoint}`,{
       name: req.body.name,
