@@ -1,65 +1,250 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Submit Supply</title>
-    <script>
-        async function submitSupply(event) {
-            console.log("you reached the submit supply function");
-            event.preventDefault(); // Prevent default form submission
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inventory Management System</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📦</text></svg>">
+    <link rel="stylesheet" href="/styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1><i class="fas fa-boxes"></i> Inventory Management System</h1>
+            <p>Manage your supplies efficiently with our microservices-based platform</p>
+        </div>
 
+        <div class="dashboard">
+            <!-- Add Supply Card -->
+            <div class="card">
+                <h2><i class="fas fa-plus-circle"></i> Add Supply</h2>
+                <form onsubmit="submitSupply(event)" id="addSupplyForm">
+                    <div class="form-group">
+                        <label for="name">
+                            <i class="fas fa-tag"></i> Supply Name
+                        </label>
+                        <input type="text" id="name" name="name" required 
+                               placeholder="Enter supply name (e.g., Laptop, Paper, etc.)">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="quantity">
+                            <i class="fas fa-sort-numeric-up"></i> Quantity
+                        </label>
+                        <input type="number" id="quantity" name="quantity" required 
+                               min="1" placeholder="Enter quantity">
+                    </div>
+
+                    <button type="submit" class="btn" id="addBtn">
+                        <i class="fas fa-plus"></i> Add Supply
+                    </button>
+                </form>
+            </div>
+
+            <!-- Consume Supply Card -->
+            <div class="card">
+                <h2><i class="fas fa-minus-circle"></i> Consume Supply</h2>
+                <form onsubmit="takeSupply(event)" id="consumeSupplyForm">
+                    <div class="form-group">
+                        <label for="name_consume">
+                            <i class="fas fa-tag"></i> Supply Name
+                        </label>
+                        <input type="text" id="name_consume" name="name_consume" required 
+                               placeholder="Enter supply name to consume">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="quantity_consume">
+                            <i class="fas fa-sort-numeric-down"></i> Quantity
+                        </label>
+                        <input type="number" id="quantity_consume" name="quantity_consume" required 
+                               min="1" placeholder="Enter quantity to consume">
+                    </div>
+
+                    <button type="submit" class="btn btn-secondary" id="consumeBtn">
+                        <i class="fas fa-minus"></i> Consume Supply
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Status Section -->
+        <div class="status-section">
+            <h2><i class="fas fa-chart-bar"></i> System Status</h2>
+            <div class="status-grid">
+                <div class="status-item">
+                    <h3>Registry Service</h3>
+                    <div class="value" id="registryStatus">
+                        <i class="fas fa-circle" style="color: #10b981;"></i> Active
+                    </div>
+                </div>
+                <div class="status-item">
+                    <h3>Producer Service</h3>
+                    <div class="value" id="producerStatus">
+                        <i class="fas fa-circle" style="color: #10b981;"></i> Active
+                    </div>
+                </div>
+                <div class="status-item">
+                    <h3>Consumer Service</h3>
+                    <div class="value" id="consumerStatus">
+                        <i class="fas fa-circle" style="color: #10b981;"></i> Active
+                    </div>
+                </div>
+                <div class="status-item">
+                    <h3>API Gateway</h3>
+                    <div class="value" id="gatewayStatus">
+                        <i class="fas fa-circle" style="color: #10b981;"></i> Active
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Enhanced submit supply function with better UX
+        async function submitSupply(event) {
+            event.preventDefault();
+            
+            const form = event.target;
+            const button = form.querySelector('button[type="submit"]');
+            const originalText = button.innerHTML;
+            
+            // Show loading state
+            button.innerHTML = '<span class="loading"></span> Adding Supply...';
+            button.disabled = true;
+            
             const name = document.getElementById('name').value;
             const quantity = document.getElementById('quantity').value;
 
-            const response = await fetch('/producer_resource_frontend', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ name, quantity })
-            });
+            try {
+                const response = await fetch('/producer_resource_frontend', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ name, quantity })
+                });
 
-            const result = await response.json();
-            alert(result.message || 'Supply submitted!');
+                const result = await response.json();
+                
+                if (response.ok && result.success) {
+                    showNotification('Supply added successfully!', 'success');
+                    form.reset();
+                } else {
+                    showNotification(result.message || 'Failed to add supply', 'error');
+                }
+            } catch (error) {
+                showNotification('Network error. Please try again.', 'error');
+                console.error('Error:', error);
+            } finally {
+                // Restore button state
+                button.innerHTML = originalText;
+                button.disabled = false;
+            }
         }
-        async function takeSupply(event) {
-            console.log("you reached the take supply function");
-            event.preventDefault();
 
+        // Enhanced consume supply function with better UX
+        async function takeSupply(event) {
+            event.preventDefault();
+            
+            const form = event.target;
+            const button = form.querySelector('button[type="submit"]');
+            const originalText = button.innerHTML;
+            
+            // Show loading state
+            button.innerHTML = '<span class="loading"></span> Consuming Supply...';
+            button.disabled = true;
+            
             const name = document.getElementById("name_consume").value;
             const quantity = document.getElementById("quantity_consume").value;
-            console.log(`name: ${name}, quantity ${quantity}`);
 
-            const response = await fetch('/consumer_resource_frontend', {
-                method: 'POST',
-                headers:{
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({name,quantity})
-            });
+            try {
+                const response = await fetch('/consumer_resource_frontend', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ name, quantity })
+                });
+
+                const result = await response.json();
+                
+                if (response.ok && result.success) {
+                    showNotification('Supply consumed successfully!', 'success');
+                    form.reset();
+                } else {
+                    showNotification(result.message || 'Failed to consume supply', 'error');
+                }
+            } catch (error) {
+                showNotification('Network error. Please try again.', 'error');
+                console.error('Error:', error);
+            } finally {
+                // Restore button state
+                button.innerHTML = originalText;
+                button.disabled = false;
+            }
         }
+
+        // Notification system
+        function showNotification(message, type = 'info') {
+            // Remove existing notifications
+            const existingNotifications = document.querySelectorAll('.notification');
+            existingNotifications.forEach(notification => notification.remove());
+
+            // Create notification element
+            const notification = document.createElement('div');
+            notification.className = `alert alert-${type} notification`;
+            notification.style.position = 'fixed';
+            notification.style.top = '20px';
+            notification.style.right = '20px';
+            notification.style.zIndex = '1000';
+            notification.style.minWidth = '300px';
+            notification.style.animation = 'fadeInUp 0.3s ease-out';
+            
+            const icon = type === 'success' ? 'fas fa-check-circle' : 
+                        type === 'error' ? 'fas fa-exclamation-circle' : 
+                        'fas fa-info-circle';
+            
+            notification.innerHTML = `
+                <i class="${icon}"></i> ${message}
+            `;
+
+            document.body.appendChild(notification);
+
+            // Auto-remove after 5 seconds
+            setTimeout(() => {
+                notification.style.animation = 'fadeOut 0.3s ease-out';
+                setTimeout(() => notification.remove(), 300);
+            }, 5000);
+        }
+
+        // Add fadeOut animation
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes fadeOut {
+                from { opacity: 1; transform: translateY(0); }
+                to { opacity: 0; transform: translateY(-20px); }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // Form validation enhancement
+        document.addEventListener('DOMContentLoaded', function() {
+            const forms = document.querySelectorAll('form');
+            forms.forEach(form => {
+                const inputs = form.querySelectorAll('input[required]');
+                inputs.forEach(input => {
+                    input.addEventListener('blur', function() {
+                        if (this.value.trim() === '') {
+                            this.classList.add('invalid');
+                        } else {
+                            this.classList.remove('invalid');
+                        }
+                    });
+                });
+            });
+        });
     </script>
-</head>
-<body>
-    <h1>Submit a Supply</h1>
-    <form onsubmit="submitSupply(event)">
-        <label for="name">Name:</label>
-        <input type="text" id="name" required><br><br>
-
-        <label for="quantity">Quantity:</label>
-        <input type="number" id="quantity" required><br><br>
-
-        <button type="submit">Submit</button>
-    </form>
-
-    <h1>Take a Supply</h1>
-    <form onsubmit="takeSupply(event)">
-        <label for="name_consume">Name</label>
-        <input type="text" id="name_consume" required><br><br>
-
-        <label for="quantity_consume">Quantity</label>
-        <input type="number" id="quantity_consume" required><br><br>
-
-        <button type="submit">Submit</button>
-    </form>
 </body>
 </html>

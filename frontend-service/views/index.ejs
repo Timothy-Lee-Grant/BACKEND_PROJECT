@@ -1,22 +1,66 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Inventory Manager</title>
-  <link rel="stylesheet" href="/styles.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inventory Management System</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📦</text></svg>">
+    <link rel="stylesheet" href="/styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
 <body>
-  <h1>Inventory Manager</h1>
+    <div class="container">
+        <div class="header">
+            <h1><i class="fas fa-boxes"></i> Inventory Management System</h1>
+            <p>Manage your supplies efficiently with our microservices-based platform</p>
+        </div>
 
-  <form action="/add" method="POST">
-    <h2>Add Item</h2>
-    <input type="text" name="item" placeholder="Item name" required>
-    <button type="submit">Add</button>
-  </form>
+        <div class="dashboard">
+            <!-- Add Item Card -->
+            <div class="card">
+                <h2><i class="fas fa-plus-circle"></i> Add Item</h2>
+                <form action="/add" method="POST">
+                    <div class="form-group">
+                        <label for="item">
+                            <i class="fas fa-tag"></i> Item Name
+                        </label>
+                        <input type="text" name="item" id="item" placeholder="Enter item name" required>
+                    </div>
+                    <button type="submit" class="btn">
+                        <i class="fas fa-plus"></i> Add Item
+                    </button>
+                </form>
+            </div>
 
-  <form action="/remove" method="POST">
-    <h2>Remove Item</h2>
-    <input type="text" name="item" placeholder="Item name" required>
-    <button type="submit">Remove</button>
-  </form>
+            <!-- Remove Item Card -->
+            <div class="card">
+                <h2><i class="fas fa-minus-circle"></i> Remove Item</h2>
+                <form action="/remove" method="POST">
+                    <div class="form-group">
+                        <label for="removeItem">
+                            <i class="fas fa-tag"></i> Item Name
+                        </label>
+                        <input type="text" name="item" id="removeItem" placeholder="Enter item name" required>
+                    </div>
+                    <button type="submit" class="btn btn-secondary">
+                        <i class="fas fa-minus"></i> Remove Item
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Navigation to New Interface -->
+        <div class="status-section">
+            <h2><i class="fas fa-exchange-alt"></i> Switch to New Interface</h2>
+            <p style="text-align: center; margin-bottom: 20px;">
+                We've updated our interface! Use the new dashboard for better functionality.
+            </p>
+            <div style="text-align: center;">
+                <a href="/" class="btn" style="display: inline-block; width: auto; padding: 15px 30px;">
+                    <i class="fas fa-arrow-right"></i> Go to New Dashboard
+                </a>
+            </div>
+        </div>
+    </div>
 </body>
 </html>
