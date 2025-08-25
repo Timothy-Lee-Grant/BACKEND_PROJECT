@@ -27,7 +27,7 @@ function getServiceUrl(serviceName) {
       throw new Error(`No instances found for ${serviceName}`);
     }
     
-    const instance = instances[0];
+    const instance = instances[0]; //notice not doing any real load balancing as of yet.
     const url = `http://${instance.ipAddr}:${instance.port.$}`;
     console.log(`Service URL for ${serviceName}: ${url}`);
     return url;
