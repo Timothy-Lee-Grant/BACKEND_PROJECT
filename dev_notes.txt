@@ -22,3 +22,6 @@ port: 8761
 producer microservice
 ip address: localhost
 port: 8080
+
+consumer microservice
+port: 8082
