@@ -12,9 +12,22 @@ const producerService  = require('../services/producerService');
 const consumerService = require('../services/consumerService');
 
 router.get('/', (req,res)=>{
-    console.log("you reached the index endpoint!! :D ");
-    res.render('home_page', {message:"hello"});
+    if(req.session.user)
+    {
+      console.log("you reached the index endpoint!! :D ");
+      res.render('home_page', {message:"hello"});
+    }
+    else{
+      //res.render('home_page', {message:"hello"});
+      res.status(400).send({error: 'Not Logged In!!!!'});
+    }
+    
 });
+
+router.get('/login', (req, res)=>{
+  res.render('login_page', {});
+})
+
 
 router.post('/add', async (req,res)=>{
     const result = await producerService.addItem(req.body.item);
@@ -27,8 +40,12 @@ router.post('/remove', async (req,res)=>{
 });
 
 
-router.get('/login', (req, res) => {
-  res.render('login');
+router.post('/login_no_authentication', (req, res)=>{
+  req.session.user = {id: 555, username:'Timothy'};
+  //res.send('Success');
+  //console.log("alskfaoin");
+  //res.redirect('/');
+  res.render('home_page', {message:"hello"});
 });
 
 router.post('/login', async (req, res) => {
@@ -102,6 +119,8 @@ router.post('/consumer_resource_frontend', async (req,res)=>{
     });
   }
 });
+
+
 
 
 module.exports = router;

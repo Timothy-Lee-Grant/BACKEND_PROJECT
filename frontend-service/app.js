@@ -16,7 +16,7 @@ app.use(express.json());
 app.use(session({
     secret: 'your-secret', 
     resave: false,
-    saveUninitialized: true
+    saveUninitialized: false
 }));
 
 app.use('/', indexRouter);

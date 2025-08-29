@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inventory Management System</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📦</text></svg>">
+    <link rel="stylesheet" href="/styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <button id="login_button">Click Here</button>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function(){
+            const button = document.getElementById('login_button');
+            button.addEventListener('click', async function(){
+                //alert('Button was clicked');
+                try {
+                    await axios.post('http://localhost:3000/login_no_authentication', {
+                    id: 444,
+                    username: 'timothy'
+                    });
+                    alert('Login request sent!');
+                } catch (err) {
+                    console.error('Login failed:', err);
+                }
+            });
+        });
+    </script>
+    <!-- Axios must be loaded before your script uses it -->
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</body>
+</html>

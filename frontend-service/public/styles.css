@@ -262,3 +262,26 @@ body {
 .card {
   animation: fadeInUp 0.6s ease-out;
 }
+
+
+
+
+
+#login_button {
+    font-size: 24px;           /* Makes the text bigger */
+    padding: 15px 30px;        /* Adds space inside the button */
+    /*background-color: #4CAF50; /* Sets the background color */
+    background: linear-gradient(135deg,#69C9D0 0%, #EE1D52 100%);
+    color: white;              /* Sets the text color */
+    border: none;              /* Removes the default border */
+    border-radius: 8px;        /* Rounds the corners */
+    cursor: pointer;           /* Changes cursor on hover */
+    position: absolute;        /* Allows manual positioning */
+    top: 50%;                  /* Moves button halfway down */
+    left: 50%;                 /* Moves button halfway across */
+    transform: translate(-50%, -50%); /* Perfectly centers it */
+  }
+
+  #login_button:hover {
+    background: black; /* Slight color change on hover */
+  }
