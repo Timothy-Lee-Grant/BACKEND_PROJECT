@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  eureka-server:
+    build: ./registry
+    ports:
+      - "8761:8761"
+    networks:
+      - micro-net
+
+  producer-service:
+    build: ./producer_resource
+    ports:
+      - "8080:8080"
+    depends_on:
+      - eureka-server
+    networks:
+      - micro-net
+
+  consumer-service:
+    build: ./consumer_resource
+    ports:
+      - "8082:8082"
+    depends_on:
+      - eureka-server
+    networks:
+      - micro-net
+
+  front-end:
+    build: ./frontend-service
+    ports:
+      - "3000:3000"
+    depends_on:
+      - eureka-server
+    networks:
+      - micro-net
+
+networks:
+  micro-net:
+    driver: bridge
