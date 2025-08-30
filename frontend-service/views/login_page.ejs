@@ -9,7 +9,18 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
 <body>
-    <button id="login_button">Click Here</button>
+    <!-- <button id="login_button">Click Here</button> -->
+    <form action="http://localhost:3000/login_no_authentication" method="POST" class="form-container">
+        <div class="login-input-elements">
+        <label for="username">Username</label>
+        <input type="text" id="username" name="username" placeholder="Username" required>
+
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" placeholder="Password" required>
+        </div>
+        <div class="login-button"></div>
+        <button type="submit" id="login-button">Log In</button>
+    </form>
 
     <script>
         document.addEventListener('DOMContentLoaded', function(){

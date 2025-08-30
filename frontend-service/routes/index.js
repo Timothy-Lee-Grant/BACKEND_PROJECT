@@ -41,11 +41,12 @@ router.post('/remove', async (req,res)=>{
 
 
 router.post('/login_no_authentication', (req, res)=>{
-  req.session.user = {id: 555, username:'Timothy'};
+  req.session.user = {password: req.body.password, username: req.body.username};
   //res.send('Success');
   //console.log("alskfaoin");
   //res.redirect('/');
-  res.render('home_page', {message:"hello"});
+  //res.render('home_page', {message:"hello"});
+  res.send("your data is "+req.session.user.password);
 });
 
 router.post('/login', async (req, res) => {
