@@ -267,6 +267,8 @@ body {
 
 
 
+
+/*I don't think I even needed any of these things below.*/
 #login_button {
     font-size: 24px;           /* Makes the text bigger */
     padding: 15px 30px;        /* Adds space inside the button */
@@ -286,6 +288,25 @@ body {
     background: black; /* Slight color change on hover */
   }
 
+  #login-button {
+  font-size: 1rem;
+  padding: 12px 24px;
+  margin: 30px;
+  background: linear-gradient(135deg, #69C9D0 0%, #EE1D52 100%);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+#username{
+  margin: 10px;
+}
+
+#login-button:hover {
+  background: black;
+}
+
 
   .login-input-elements{
     display: flex;
@@ -299,5 +320,16 @@ body {
   justify-content: center;
   align-items: center;
   height: 100vh;
-  background-color: #f0f4f8; /* Page background */
+  padding: 20px;
+  
+  /*background-color: #f0f4f8;  Page background */
+}
+
+.login-form {
+  background: white;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+  width: 100%;
+  max-width: 400px;
 }
