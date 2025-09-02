@@ -4,6 +4,8 @@ const path = require('path');
 const indexRouter = require('./routes/index');
 const session = require('express-session');
 require('./services/eureka');
+const swaggerJsdoc = require('swagger-jsdoc');
+const swaggerUi = require('swagger-ui-express');
 
 const app = express();
 app.set('view engine', 'ejs');
@@ -13,6 +15,21 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.json());
 
 
+//attempting to get swagger to work
+const options = {
+  definition: {
+    openapi: '3.0.0',
+    info: {
+      title: 'Your API',
+      version: '1.0.0',
+    },
+  },
+  apis: ['./routes/*.js'], // Adjust path to where your routes live
+};
+
+const specs = swaggerJsdoc(options);
+
+
 app.use(session({
     secret: 'your-secret', 
     resave: false,
@@ -20,6 +37,7 @@ app.use(session({
 }));
 
 app.use('/', indexRouter);
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
 
 //app.use('/testing, testingRouter');
 

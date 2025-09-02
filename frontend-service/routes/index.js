@@ -10,6 +10,39 @@ const express = require('express');
 const router = express.Router(); //what does Router constructer acutally do?
 const producerService  = require('../services/producerService');
 const consumerService = require('../services/consumerService');
+const pool = require('../services/postgresql')
+const bcrypt = require('bcrypt');
+
+
+/**
+ * @swagger
+ * /register:
+ *   post:
+ *     summary: Register a new user
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - username
+ *               - password
+ *             properties:
+ *               username:
+ *                 type: string
+ *               password:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: User registered successfully
+ */
+router.post('/register', async (req, res)=>{
+  const {username, password} = req.body;
+  const hash = await bcrypt.hash(password, 10);
+  await pool.query('INSERT INTO users (username, password_hash) VALUES ($1, $2)', [username, hash]);
+  res.send('User registered');
+})
 
 router.get('/', (req,res)=>{
     if(req.session.user)
@@ -21,7 +54,6 @@ router.get('/', (req,res)=>{
       //res.render('home_page', {message:"hello"});
       res.status(400).send({error: 'Not Logged In!!!!'});
     }
-    
 });
 
 router.get('/login', (req, res)=>{

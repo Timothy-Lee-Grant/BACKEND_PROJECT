@@ -32,9 +32,30 @@ services:
       - "3000:3000"
     depends_on:
       - eureka-server
+      - postgres
+    environment:
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_USER: youruser
+      DB_PASSWORD: yourpassword
+      DB_NAME: inventorydb
     networks:
       - micro-net
 
+  postgres:
+    image: postgres:15
+    restart: always
+    environment:
+      POSTGRES_USER: youruser
+      POSTGRES_PASSWORD: yourpassword
+      POSTGRES_DB: inventorydb
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
 networks:
   micro-net:
     driver: bridge
+
+volumes:
+  pgdata:

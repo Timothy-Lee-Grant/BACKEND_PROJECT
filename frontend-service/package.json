@@ -14,10 +14,14 @@
   "type": "commonjs",
   "dependencies": {
     "axios": "^1.11.0",
+    "bcrypt": "^6.0.0",
     "dotenv": "^17.2.1",
     "ejs": "^3.1.10",
     "eureka-js-client": "^4.5.0",
     "express": "^5.1.0",
-    "express-session": "^1.18.2"
+    "express-session": "^1.18.2",
+    "pg": "^8.16.3",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-express": "^5.0.1"
   }
 }
