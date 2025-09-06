@@ -41,11 +41,17 @@ router.post('/register', async (req, res)=>{
   const {username, password} = req.body;
   const hash = await bcrypt.hash(password, 10);
   await pool.query('INSERT INTO users (username, password_hash) VALUES ($1, $2)', [username, hash]);
-  res.send('User registered');
+  //res.send('User registered');
+  req.body.isLoggedIn = true;
+  res.redirect('/');
+});
+
+router.get('/register',(req, res)=>{
+  res.render('create_account');
 })
 
 router.get('/', (req,res)=>{
-    if(req.session.user)
+    if(req.session.isLoggedIn)
     {
       console.log("you reached the index endpoint!! :D ");
       res.render('home_page', {message:"hello"});
@@ -58,7 +64,32 @@ router.get('/', (req,res)=>{
 
 router.get('/login', (req, res)=>{
   res.render('login_page', {});
-})
+});
+
+router.post('/login', async (req,res)=>{
+  try{
+    const {username, password} = req.body;
+    //const hash = await bcrypt.hash(password, 10); //For the same raw password does it give the same has each time?
+    const result = await pool.query('SELECT password_hash FROM users WHERE username = $1', [username]);
+    if(result.rows.length === 0){
+      return res.status(401).send('Invalid username or password');
+    }
+
+    const storedHash = result.rows[0].password_hash;
+
+    const isMatch = await bcrypt.compare(password, storedHash);
+
+    if (isMatch){
+      req.session.isLoggedIn = true;
+      res.redirect('/');
+    } else{
+      res.status(401).send('Incorrect username or password')
+    }
+  }
+  catch(err) {
+    res.status(500).send(`Error in login route ${err}`);
+  }
+});
 
 
 router.post('/add', async (req,res)=>{
@@ -81,6 +112,7 @@ router.post('/login_no_authentication', (req, res)=>{
   res.send("your data is "+req.session.user.password);
 });
 
+/*
 router.post('/login', async (req, res) => {
   const { username, password } = req.body;
 
@@ -93,6 +125,7 @@ router.post('/login', async (req, res) => {
     res.render('login', { error: 'Invalid credentials' });
   }
 });
+*/
 
 router.get('/logout', (req, res) => {
   req.session.destroy(() => res.redirect('/'));
