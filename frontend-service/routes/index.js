@@ -7,18 +7,20 @@
 
 
 const express = require('express');
-const router = express.Router(); //what does Router constructer acutally do?
+const router = express.Router();
 const producerService  = require('../services/producerService');
 const consumerService = require('../services/consumerService');
 const pool = require('../services/postgresql')
 const bcrypt = require('bcrypt');
-
+const { callService, postService } = require('../services/serviceCaller');
 
 /**
  * @swagger
  * /register:
  *   post:
  *     summary: Register a new user
+ *     tags:
+ *       - Authentication
  *     requestBody:
  *       required: true
  *       content:
@@ -31,11 +33,22 @@ const bcrypt = require('bcrypt');
  *             properties:
  *               username:
  *                 type: string
+ *                 description: Username for the new account
  *               password:
  *                 type: string
+ *                 description: Password for the new account
+ *     responses:
+ *       302:
+ *         description: User registered successfully and redirected to home
+ *       500:
+ *         description: Internal server error during registration
+ *   get:
+ *     summary: Get registration page
+ *     tags:
+ *       - Authentication
  *     responses:
  *       200:
- *         description: User registered successfully
+ *         description: Returns the registration form page
  */
 router.post('/register', async (req, res)=>{
   const {username, password} = req.body;
@@ -49,6 +62,21 @@ router.post('/register', async (req, res)=>{
 router.get('/register',(req, res)=>{
   res.render('create_account');
 })
+
+/**
+ * @swagger
+ * /:
+ *   get:
+ *     summary: Get the home page
+ *     tags:
+ *       - Home
+ *     description: Returns the home page if user is logged in
+ *     responses:
+ *       200:
+ *         description: Home page rendered successfully
+ *       400:
+ *         description: User not logged in
+ */
 
 router.get('/', (req,res)=>{
     if(req.session.isLoggedIn)
@@ -65,6 +93,43 @@ router.get('/', (req,res)=>{
 router.get('/login', (req, res)=>{
   res.render('login_page', {});
 });
+
+/**
+ * @swagger
+ * /login:
+ *   get:
+ *     summary: Get the login page
+ *     tags:
+ *       - Authentication
+ *     responses:
+ *       200:
+ *         description: Returns the login form page
+ *   post:
+ *     summary: Authenticate user and create session
+ *     tags:
+ *       - Authentication
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - username
+ *               - password
+ *             properties:
+ *               username:
+ *                 type: string
+ *               password:
+ *                 type: string
+ *     responses:
+ *       302:
+ *         description: Login successful, redirects to home page
+ *       401:
+ *         description: Invalid username or incorrect password
+ *       500:
+ *         description: Internal server error during login
+ */
 
 router.post('/login', async (req,res)=>{
   try{
@@ -97,10 +162,62 @@ router.post('/add', async (req,res)=>{
     res.render('result', {message: result});
 });
 
+/**
+ * @swagger
+ * /add:
+ *   post:
+ *     summary: Add a new item via producer service
+ *     tags:
+ *       - Items
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - item
+ *             properties:
+ *               item:
+ *                 type: string
+ *                 description: Item name or identifier to add
+ *     responses:
+ *       200:
+ *         description: Item added successfully
+ *       500:
+ *         description: Error adding item to producer service
+ */
+
 router.post('/remove', async (req,res)=>{
     const result = await consumerService.addItem(req.body.item);
     res.render('result', {message: result});
 });
+
+/**
+ * @swagger
+ * /remove:
+ *   post:
+ *     summary: Remove an item via consumer service
+ *     tags:
+ *       - Items
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - item
+ *             properties:
+ *               item:
+ *                 type: string
+ *                 description: Item name or identifier to remove
+ *     responses:
+ *       200:
+ *         description: Item removed successfully
+ *       500:
+ *         description: Error removing item from consumer service
+ */
 
 
 router.post('/login_no_authentication', (req, res)=>{
@@ -111,6 +228,34 @@ router.post('/login_no_authentication', (req, res)=>{
   //res.render('home_page', {message:"hello"});
   res.send("your data is "+req.session.user.password);
 });
+
+/**
+ * @swagger
+ * /login_no_authentication:
+ *   post:
+ *     summary: Login without authentication (for testing only)
+ *     tags:
+ *       - Authentication
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - username
+ *               - password
+ *             properties:
+ *               username:
+ *                 type: string
+ *               password:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Session created without authentication verification
+ *       500:
+ *         description: Error creating session
+ */
 
 /*
 router.post('/login', async (req, res) => {
@@ -131,6 +276,20 @@ router.get('/logout', (req, res) => {
   req.session.destroy(() => res.redirect('/'));
 });
 
+/**
+ * @swagger
+ * /logout:
+ *   get:
+ *     summary: Logout user and destroy session
+ *     tags:
+ *       - Authentication
+ *     responses:
+ *       302:
+ *         description: Session destroyed, redirects to home page
+ *       500:
+ *         description: Error during logout
+ */
+
 
 
 router.get('/products', async (req, res) => {
@@ -144,12 +303,31 @@ router.get('/products', async (req, res) => {
   }
 });
 
+/**
+ * @swagger
+ * /products:
+ *   get:
+ *     summary: Get all products
+ *     tags:
+ *       - Products
+ *     description: Fetches products from product service (requires authentication)
+ *     responses:
+ *       200:
+ *         description: Products retrieved successfully
+ *       302:
+ *         description: Not authenticated, redirects to login
+ *       500:
+ *         description: Error fetching products from service
+ */
+
+
+
+
 
 
 
 // index.js
 //require('../services/eureka'); // Start Eureka client
-const { callService , postService} = require('../services/serviceCaller');
 
 router.get('/hello', async (req, res) => {
   try {
@@ -159,6 +337,21 @@ router.get('/hello', async (req, res) => {
     res.status(500).send('Failed to reach producer');
   }
 });
+
+/**
+ * @swagger
+ * /hello:
+ *   get:
+ *     summary: Test endpoint to reach producer service
+ *     tags:
+ *       - Service Communication
+ *     description: Calls the producer service hello endpoint to verify connectivity
+ *     responses:
+ *       200:
+ *         description: Message from producer service
+ *       500:
+ *         description: Failed to reach producer service
+ */
 
 router.post('/producer_resource_frontend', async (req, res) => {
   try {
@@ -173,6 +366,27 @@ router.post('/producer_resource_frontend', async (req, res) => {
   }
 });
 
+/**
+ * @swagger
+ * /producer_resource_frontend:
+ *   post:
+ *     summary: Forward request to producer service
+ *     tags:
+ *       - Service Communication
+ *     description: Sends data to the producer service to add supplies
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *     responses:
+ *       200:
+ *         description: Successfully processed by producer service
+ *       500:
+ *         description: Failed to reach producer service
+ */
+
 router.post('/consumer_resource_frontend', async (req,res)=>{
   try{
     const message = await postService('CONSUMER_RESOURCE', '/consume_resource', req);
@@ -185,6 +399,27 @@ router.post('/consumer_resource_frontend', async (req,res)=>{
     });
   }
 });
+
+/**
+ * @swagger
+ * /consumer_resource_frontend:
+ *   post:
+ *     summary: Forward request to consumer service
+ *     tags:
+ *       - Service Communication
+ *     description: Sends data to the consumer service to consume resources
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *     responses:
+ *       200:
+ *         description: Successfully processed by consumer service
+ *       500:
+ *         description: Failed to reach consumer service
+ */
 
 
 
